@@ -49,6 +49,51 @@ RUN userdel -r yoctouser && \
         /usr/bin/restrict_useradd.sh && \
     echo "#include /etc/sudoers.usersetup" >> /etc/sudoers
 
+# CONSAT addition --START
+RUN apt-get remove -y python3.8
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        software-properties-common \
+#        python3.7 \
+        git-lfs \
+        rsync \
+#        python3-pip \
+        tzdata \
+        net-tools \
+        sqlite \
+        curl \
+        bc \
+        linux-headers-generic \
+        bison
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    python3.6 \
+    python3-pip
+
+RUN rm /usr/bin/python3
+RUN ln -s python3.6 /usr/bin/python3
+
+# Fix for nxp-wlan-sdk missing libraries
+# https://community.nxp.com/t5/i-MX-Processors/zeus-5-4-24-2-1-0-won-t-boot-on-my-IMX8MNEVK-board/m-p/1071512
+RUN ln -s /lib/modules/4.15.0-134-generic /lib/modules/4.19.128-microsoft-standard
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libncurses5-dev
+
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/bin/repo
+RUN chmod a+x /usr/bin/repo
+
+RUN echo 'alias yocto="DISTRO=fsl-imx-xwayland MACHINE=imx8mmcppc0701 source imx-setup-release.sh -b build-xwayland"' > /etc/skel/.bash_aliases
+
+# FROM python:3
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install --no-cache-dir 'Django>1.8,<1.12' && \
+    python3 -m pip install --no-cache-dir 'beautifulsoup4>=4.4.0' && \
+    python3 -m pip install --no-cache-dir gitpython && \
+    python3 -m pip install --no-cache-dir pytz
+
+# CONSAT addition --END
+
 USER usersetup
 ENV LANG=en_US.UTF-8
 
