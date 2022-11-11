@@ -69,7 +69,8 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     python3.6 \
-    python3-pip
+    python3-pip \
+    python3.6-distutils
 
 RUN rm /usr/bin/python3
 RUN ln -s python3.6 /usr/bin/python3
