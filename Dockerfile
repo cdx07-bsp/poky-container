@@ -64,7 +64,8 @@ RUN apt-get update && \
         curl \
         bc \
         linux-headers-generic \
-        bison
+        bison \
+        zip
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -84,7 +85,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libncurses5-dev
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/bin/repo
 RUN chmod a+x /usr/bin/repo
 
-RUN echo 'alias yocto="DISTRO=fsl-imx-xwayland MACHINE=imx8mmcppc0701 source imx-setup-release.sh -b build-xwayland"' > /etc/skel/.bash_aliases
+RUN echo 'alias yocto="DISTRO=fsl-imx-xwayland MACHINE=imx8mmcdx07 source sources/meta-nexcomm/tools/nexcomm-setup-env.sh -b build-cdx07-xwayland"' > /etc/skel/.bash_aliases
 
 # FROM python:3
 RUN python3 -m pip install --upgrade pip && \
