@@ -8,6 +8,10 @@ on:
   # Allow for manually running
   workflow_dispatch:
 
+  # Run at 01:42 UTC every Saturday
+  schedule:
+    - cron: '42 1 * * 6'
+
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
@@ -15,16 +19,16 @@ jobs:
       fail-fast: false
       matrix:
         base_distro: [
+                      alma-8,
+                      alma-9,
                       centos-7,
-                      centos-8,
-                      debian-9,
                       debian-10,
-                      fedora-33,
-                      fedora-34,
-                      opensuse-15.2,
-                      ubuntu-16.04,
+                      debian-11,
+                      fedora-36,
+                      opensuse-15.4,
                       ubuntu-18.04,
-                      ubuntu-20.04
+                      ubuntu-20.04,
+                      ubuntu-22.04
         ]
     env:
       BASE_DISTRO: ${{ matrix.base_distro }}
@@ -34,7 +38,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Build and test the images
       - name: Run build-and-test.sh
